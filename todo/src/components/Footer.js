@@ -14,6 +14,16 @@ function Footer({ todos, settodos, settab }) {
     settodos(todos.filter((_todo) => !_todo.completed));
   }
 
+  const setTab = (val) => () => {
+    settab(val);
+  };
+
+  // function setTab(val) {
+  //   return () => {
+  //     settab(val);
+  //   };
+  // }
+
   return (
     <div id="footer">
       <div id="options">
@@ -22,21 +32,21 @@ function Footer({ todos, settodos, settab }) {
           <button
             id="allButton"
             className="optionsButton"
-            onClick={() => settab("all")}
+            onClick={setTab("all")}
           >
             All
           </button>
           <button
             id="activeButton"
             className="optionsButton"
-            onClick={() => settab("active")}
+            onClick={setTab("active")}
           >
             Active
           </button>
           <button
             id="completedButton"
             className="optionsButton"
-            onClick={() => settab("completed")}
+            onClick={setTab("completed")}
           >
             Completed
           </button>

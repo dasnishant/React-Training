@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 
 function TodoItem({ todo, todos, settodos }) {
   console.log("TodoItem");
-  const [isDelete, setisDelete] = useState(false);
 
   function deleteTodo() {
     settodos(todos.filter((_todo) => _todo.id !== todo.id));
@@ -20,17 +19,15 @@ function TodoItem({ todo, todos, settodos }) {
   }
 
   return (
-    <div
-      className="todoItem"
-      onMouseOver={() => setisDelete(true)}
-      onMouseLeave={() => setisDelete(false)}
-    >
+    <div className="todoItem">
       <label onClick={checkedTodo}>
         {todo.completed && <span className="checkedTodo">✔️</span>}
       </label>
 
       <p className={`${todo.completed && "strikeThrough"}  `}>{todo.todo}</p>
-      {isDelete && <span onClick={deleteTodo}>❌</span>}
+      <span onClick={deleteTodo} className="deleteBtn">
+        ❌
+      </span>
     </div>
   );
 }

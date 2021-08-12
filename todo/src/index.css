@@ -67,6 +67,14 @@ h1 {
   font-size: 30px;
 }
 
+.deleteBtn {
+  opacity: 0;
+}
+
+.todoItem:hover .deleteBtn {
+  opacity: 1;
+}
+
 .todoItem > span {
   font-size: 15px;
   cursor: default;
