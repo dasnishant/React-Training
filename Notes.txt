@@ -1,0 +1,34 @@
+Go through SCSS
+
+Practise redux, useSelector, reducers as pure functions, connect(refer docs for all)
+
+2 weeks --> Instagram clone (Home Page, Profile)
+Instagram clone start it after going  through redux(practise) 
+
+Learnings:
+
+1. Whenever there's change in some UI(like show element on hover) first try to achieve all those things
+using CSS/SCSS, do not use State for all such things.
+
+2. When adding event for eg: onClick never use arrow functions in it as it creates instance of it every time
+an event occurs
+Can be best explained with example:
+first way:
+
+const setTab = (val) => () => {
+        settab(val);
+    };
+
+second way:
+
+function setTab(val) {
+    return () => {
+      settab(val);
+    };
+}
+
+onClick={setTab("all")} //event
+onClick={()=>settab('all)}  //this creates instance every single time 
+
+3. Keep all your logic and data in Main component and all the subcomponents should be dumb component
+(i.e. its work should only be of displaying that component and no logic)
