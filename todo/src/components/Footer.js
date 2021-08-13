@@ -1,33 +1,14 @@
 import React from "react";
 
-function Footer({ todos, settodos, settab }) {
+function Footer({ todos, setTab, clearCompleted, getCompletedTodoCount }) {
   console.log("Footer");
-  var completedTodo = 0;
-
-  todos.map((_todo) => {
-    if (_todo.completed) {
-      completedTodo++;
-    }
-  });
-
-  function clearCompleted() {
-    settodos(todos.filter((_todo) => !_todo.completed));
-  }
-
-  const setTab = (val) => () => {
-    settab(val);
-  };
-
-  // function setTab(val) {
-  //   return () => {
-  //     settab(val);
-  //   };
-  // }
 
   return (
     <div id="footer">
       <div id="options">
-        <p id="itemsLeft">{todos.length - completedTodo} items left</p>
+        <p id="itemsLeft">
+          {todos.length - getCompletedTodoCount()} items left
+        </p>
         <div className="footerButtons">
           <button
             id="allButton"
@@ -51,7 +32,7 @@ function Footer({ todos, settodos, settab }) {
             Completed
           </button>
         </div>
-        {completedTodo > 0 && (
+        {getCompletedTodoCount() > 0 && (
           <p id="clearCompleted" onClick={clearCompleted}>
             Clear Completed
           </p>

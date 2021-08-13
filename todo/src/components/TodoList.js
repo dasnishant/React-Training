@@ -1,23 +1,16 @@
 import TodoItem from "./TodoItem";
 
-function TodoList({ todos, settodos, tab }) {
+function TodoList({ getTodos, deleteTodo, checkedTodo }) {
   console.log("TodoList");
-  var todosCopy = todos;
-
-  if (tab === "active") {
-    todosCopy = todosCopy.filter((_todo) => !_todo.completed);
-  } else if (tab === "completed") {
-    todosCopy = todosCopy.filter((_todo) => _todo.completed);
-  }
 
   return (
     <div id="todoList">
-      {todosCopy.map((_todo) => {
+      {getTodos().map((_todo) => {
         return (
           <TodoItem
+            deleteTodo={deleteTodo}
+            checkedTodo={checkedTodo}
             todo={_todo}
-            todos={todos}
-            settodos={settodos}
             key={_todo.id}
           />
         );
