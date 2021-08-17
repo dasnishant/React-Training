@@ -1,39 +1,38 @@
 import React from "react";
 
-function Footer({ todos, setTab, clearCompleted, getCompletedTodoCount }) {
-  console.log("Footer");
-
+function Footer({
+  completedTodosCount,
+  todoLength,
+  tabAll,
+  tabActive,
+  tabCompleted,
+  clearCompleted,
+}) {
   return (
     <div id="footer">
       <div id="options">
-        <p id="itemsLeft">
-          {todos.length - getCompletedTodoCount()} items left
-        </p>
+        <p id="itemsLeft">{todoLength - completedTodosCount} items left</p>
         <div className="footerButtons">
-          <button
-            id="allButton"
-            className="optionsButton"
-            onClick={setTab("all")}
-          >
+          <button id="allButton" className="optionsButton" onClick={tabAll()}>
             All
           </button>
           <button
             id="activeButton"
             className="optionsButton"
-            onClick={setTab("active")}
+            onClick={tabActive()}
           >
             Active
           </button>
           <button
             id="completedButton"
             className="optionsButton"
-            onClick={setTab("completed")}
+            onClick={tabCompleted()}
           >
             Completed
           </button>
         </div>
-        {getCompletedTodoCount() > 0 && (
-          <p id="clearCompleted" onClick={clearCompleted}>
+        {completedTodosCount > 0 && (
+          <p id="clearCompleted" onClick={clearCompleted()}>
             Clear Completed
           </p>
         )}

@@ -1,17 +1,15 @@
 import TodoItem from "./TodoItem";
 
-function TodoList({ getTodos, deleteTodo, checkedTodo }) {
-  console.log("TodoList");
-
+function TodoList({ todosCopy, checkedTodoHandler, deleteTodoHandler }) {
   return (
     <div id="todoList">
-      {getTodos().map((_todo) => {
+      {todosCopy.map((_todo) => {
         return (
           <TodoItem
-            deleteTodo={deleteTodo}
-            checkedTodo={checkedTodo}
-            todo={_todo}
             key={_todo.id}
+            todo={_todo}
+            checkedTodoHandler={checkedTodoHandler}
+            deleteTodoHandler={deleteTodoHandler}
           />
         );
       })}

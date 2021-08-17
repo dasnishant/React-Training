@@ -1,115 +1,133 @@
-import { useState } from "react";
 import Input from "./components/Input";
 import TodoList from "./components/TodoList";
 import Footer from "./components/Footer";
 import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addTodo,
+  deleteTodo,
+  checkedTodo,
+  clearCompletedTodos,
+  setTabToCompleted,
+  setTabToActive,
+  setTabToAll,
+  toggleAllToCompleted,
+  setInputSpecialCharError,
+  setInputNumError,
+  setInputTextError,
+  setInputNoError,
+} from "./actions";
 
 function App() {
-  const [todos, settodos] = useState([]);
-  const [tab, settab] = useState("all");
-  const [toggleAll, settoggleAll] = useState(false);
+  console.log("App");
 
-  function addTodo(event) {
-    if (event.key === "Enter") {
-      if (event.target.value.trim() === "") {
-        alert("Enter some text in input field");
-      } else {
-        let todosCopy = [...todos];
-        todosCopy.push({
-          id: Date.now().toString(),
-          todo: event.target.value,
-          completed: false,
-        });
-        settodos(todosCopy);
-        event.target.value = "";
-      }
+  const todoReducer = useSelector((state) => state.todoReducer.todos);
+  const tabReducer = useSelector((state) => state.tabReducer);
+  const errorReducer = useSelector((state) => state.errorReducer);
+
+  const dispatch = useDispatch();
+
+  function getTodos() {
+    if (tabReducer === "Active") {
+      return todoReducer.filter((_todo) => !_todo.completed);
+    } else if (tabReducer === "Completed") {
+      return todoReducer.filter((_todo) => _todo.completed);
     }
+    return todoReducer;
   }
 
-  function toggleAllToCompleted() {
-    if (toggleAll) {
-      let todosCopy = [...todos];
-      todosCopy.map((_todo) => (_todo.completed = false));
-      settodos(todosCopy);
-    } else {
-      let todosCopy = [...todos];
-      todosCopy.map((_todo) => (_todo.completed = true));
-      settodos(todosCopy);
-    }
-    settoggleAll(!toggleAll);
-  }
-
-  function deleteTodo(todo) {
-    return () => settodos(todos.filter((_todo) => _todo.id !== todo.id));
-  }
-
-  function checkedTodo(todo) {
-    return function () {
-      let todosCopy = [...todos];
-      todosCopy.map((_todo) => {
-        if (_todo.id === todo.id) {
-          _todo.completed
-            ? (_todo.completed = false)
-            : (_todo.completed = true);
-        }
-      });
-      console.log(todosCopy);
-      settodos(todosCopy);
-    };
-  }
-
-  function clearCompleted() {
-    settodos(todos.filter((_todo) => !_todo.completed));
-  }
-
-  const setTab = (val) => () => {
-    settab(val);
-  };
-
-  function getCompletedTodoCount() {
+  function getCompletedTodosCount() {
     var completedTodo = 0;
-
-    todos.map((_todo) => {
+    todoReducer.map((_todo) => {
       if (_todo.completed) {
-        completedTodo++;
+        ++completedTodo;
       }
     });
     return completedTodo;
   }
 
-  function getTodos() {
-    var todosCopy = todos;
-    if (tab === "active") {
-      todosCopy = todosCopy.filter((_todo) => !_todo.completed);
-    } else if (tab === "completed") {
-      todosCopy = todosCopy.filter((_todo) => _todo.completed);
+  function validateInput(event) {
+    let text = event.target;
+    let numRegex = /\d/;
+    let specialCharRegex = /[!@#$%^&*)(+=._-]/;
+    if (numRegex.test(text.value)) {
+      dispatch(setInputNumError());
+    } else if (specialCharRegex.test(text.value)) {
+      dispatch(setInputSpecialCharError());
+    } else {
+      dispatch(setInputNoError());
     }
-    return todosCopy;
   }
 
-  console.log("App");
+  function todoInput(event) {
+    if (event.key === "Enter") {
+      let text = event.target;
+      let numRegex = /\d/;
+      let specialCharRegex = /[!@#$%^&*)(+=._-]/;
+      if (text.value.trim() === "") {
+        dispatch(setInputTextError());
+      } else if (numRegex.test(text.value)) {
+        console.log("Numbers are not allowed");
+      } else if (specialCharRegex.test(text.value)) {
+        console.log("Special Characters are not allowed");
+      } else {
+        dispatch(addTodo(text.value));
+        text.value = "";
+      }
+    }
+  }
+
+  const toggleAllToCompletedHandler = () => () => {
+    dispatch(toggleAllToCompleted());
+  };
+
+  const checkedTodoHandler = (todo) => () => {
+    dispatch(checkedTodo(todo));
+  };
+
+  const deleteTodoHandler = (todo) => () => {
+    dispatch(deleteTodo(todo));
+  };
+
+  const tabAll = () => () => {
+    dispatch(setTabToAll());
+  };
+
+  const tabActive = () => () => {
+    dispatch(setTabToActive());
+  };
+
+  const tabCompleted = () => () => {
+    dispatch(setTabToCompleted());
+  };
+
+  const clearCompleted = () => () => {
+    dispatch(clearCompletedTodos());
+  };
+
   return (
     <div className="app">
       <h1>todos</h1>
       <Input
-        todosLength={todos.length}
-        addTodo={addTodo}
-        toggleAllToCompleted={toggleAllToCompleted}
-        toggleAll={toggleAll}
+        todoInput={todoInput}
+        validateInput={validateInput}
+        todoLength={todoReducer.length}
+        toggleAllToCompletedHandler={toggleAllToCompletedHandler}
+        error={errorReducer}
       />
       <TodoList
-        todos={todos}
-        tab={tab}
-        deleteTodo={deleteTodo}
-        checkedTodo={checkedTodo}
-        getTodos={getTodos}
+        todosCopy={getTodos()}
+        checkedTodoHandler={checkedTodoHandler}
+        deleteTodoHandler={deleteTodoHandler}
       />
-      {todos.length > 0 && (
+      {todoReducer.length > 0 && (
         <Footer
-          todos={todos}
+          completedTodosCount={getCompletedTodosCount()}
+          todoLength={todoReducer.length}
+          tabAll={tabAll}
+          tabActive={tabActive}
+          tabCompleted={tabCompleted}
           clearCompleted={clearCompleted}
-          setTab={setTab}
-          getCompletedTodoCount={getCompletedTodoCount}
         />
       )}
     </div>
