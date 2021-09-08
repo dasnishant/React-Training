@@ -32,3 +32,9 @@ onClick={()=>settab('all)}  //this creates instance every single time
 
 3. Keep all your logic and data in Main component and all the subcomponents should be dumb component
 (i.e. its work should only be of displaying that component and no logic)
+
+4. Reducers:
+        Create seperate file for each reducer, put loadingState, errorState, etc. for each particular reducers,
+        but there are cases where we write reducers for only Modal,etc.
+
+5. Routing should be handled in seperate Component.
